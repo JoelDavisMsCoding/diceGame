@@ -1,0 +1,31 @@
+
+.dice1
+{
+    padding-top: 2px;
+    padding: 0px;
+    margin-top: 20px;
+    line-height: 45%;
+    font-size: 60px;
+    text-align: center;
+    background-color:white;
+    border-style: solid;
+    height: 100px;
+    width: 100px;
+    border-radius: 10%; box-shadow: 0, 0, 10px rgba(0, 0, 0, 0.25);
+}
+.dice2
+{
+    padding-top: 2px;
+    padding: 0px;
+    margin-top: 20px;
+    line-height: 45%;
+    font-size: 60px;
+    text-align: center;
+    background-color:white;
+    border-style: solid;
+    height: 100px;
+    width: 100px;
+    border-radius: 10%; box-shadow: 0, 0, 10px rgba(0, 0, 0, 0.25);
+}
+.col {color: rgb(0, 0, 0);}
+.centerMidDot {position: absolute; align-self: center; position-area: center;}
