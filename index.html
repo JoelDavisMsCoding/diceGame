@@ -5,12 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.css">
     <link rel="stylesheet" href="./css/style.css">
-    <title>Dice <Table></Table></title>
+    <title>Dice Table</title>
 </head>
 <body>
-    <div class="container text-center">
+    <div class="container text-center gameInfo">
         <div class="row">
-            <div class="col displaySection"><h1>Click the dice to begin rolling.</h1></div>
+            <div class="col d-flex giCol1">
+                <p>Max: $100.00 - Min: $5.00"</p>
+                <input type="text" name="wagerInput" id="wagerInput" placeholder="Enter wager amount.">
+                <button type="submit" id="wagerButton">Add</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col giCol2">
+                <div class="col displayMoney"><h3></h3></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col displaySection giCol3">
+                <h1></h1></div>
         </div>
     </div>
 

@@ -7,63 +7,45 @@
 //Use a while loop to check every time the dice are rolled to see if the new diceRollNumb matches the point(diceRollNumb from first roll) or 7.
 //if the point is matched before 7 appears the wager is won. If 7 appears before the point the wager is lost.
 
+let inputBox = document.getElementById("wagerInput")
+let addWagerBtn = document.getElementById("wagerButton")
+let displayMoney = document.querySelector(".displayMoney h3")
 let displaySection = document.querySelector(".displaySection h1")
 let dice1 = document.querySelector(".dice1"); //assigned this a variable to be able to click the dice and start the roll.
 let dice2 = document.querySelector(".dice2");
 let dice1Display = document.querySelectorAll(".dice1 .col"); //Allows access and control over the dots inside the dice(how i change dice number)
 let dice2Display = document.querySelectorAll(".dice2 .col");
-let playerWager = 0;
+let start_TotalWager = 200.00;
+let wagerPerRound = 0;
 let playerPointsArr = [];
 let playerPoint = 0;
 let winningPoint = 0
 let diceRollNumb = 0;
 let rollCount = 0;
+let winRound = false;
 let gameOver = false;
 
-function WagerValidation()
+inputBox.addEventListener("input", () => //Entering how much money they will use for the round.
 {
-    playerWager = prompt("Enter dollar amount you wish to enter the game. Max: $500.00 - Min: $5.00");
-    while (isNaN(playerWager))
-    {
-        alert("Invalid Input. Please enter a number to continue.");
-        playerWager = prompt("Enter dollar amount you wish to enter the game. Max: $500.00 - Min: $5.00");
-    }
-    while (playerWager > 500.00)
-    {
-        alert("$500 Max.");
-        playerWager = prompt("Enter dollar amount you wish to enter the game. Max: $500.00 - Min: $5.00");
-    }
-    while (playerWager < 5.00)
-    {
-        alert("$5 Min.");
-        playerWager = prompt("Enter dollar amount you wish to enter the game. Max: $500.00 - Min: $5.00");
-    }
-    console.log(playerWager)
-}
+    InputBoxValidation();
+})
 
-WagerValidation();
+addWagerBtn.addEventListener("click", () =>
+{
+    inputBox.value = "";
+    displayMoney.innerHTML = `Betting: ${wagerPerRound}`
+    displaySection.innerHTML = "Click the dice to begin roll."
+})
 
-
-// dice1.addEventListener("click", () =>
-// {
-//      Dice1Display();
-//      Dice2Display(); 
-// })
 dice1.addEventListener("click", () =>
 {
     Dice1Display();
     Dice2Display();
     playerPointsArr.push(diceRollNumb);
     rollCount++
-    
-
-    if (playerPoint == 0 || playerPointsArr[0] != 7 || playerPointsArr[0] != 11 || playerPointsArr[0] != 2 || playerPointsArr[0] != 3 || playerPointsArr[0] != 12 )
-    {displaySection.innerHTML = `You rolled a ${diceRollNumb} on your comeout roll. ${diceRollNumb} is your point.`;} //Introding the first roll of the game.
 
     playerPoint = playerPointsArr[0];
-
     CheckFirstRoll()
-
     for (let i = 0; i < playerPointsArr.length; i++) //Win or lose checks once player has a point.
     {
         for (let j = i + 1; j < playerPointsArr.length; j++)
@@ -71,24 +53,83 @@ dice1.addEventListener("click", () =>
             if (playerPointsArr[0] == playerPointsArr[j])
             {
                 displaySection.innerHTML = `You Win. Your point is ${playerPoint}. You rolled a ${diceRollNumb}.`; //Checks the first number then compare the next rolled number to see if they match. Indicating win if true.
-                console.log(`You Win. Your point is ${playerPoint}. You rolled a ${diceRollNumb}.`);
+                winRound = true;
+                PayOut_PayUp();
             }
             else if (diceRollNumb == 7 && rollCount > 1)
             {
                 displaySection.innerHTML = `You Lose! Your point is ${playerPoint}. You rolled a ${diceRollNumb}.`; //Checks for any number after the first roll checking for a 7 Indicating a lost if true.
-                console.log(`You Lose! Your point is ${playerPoint}. You rolled a ${diceRollNumb}.`);
+                winRound = false;
+                PayOut_PayUp();
             }
             else if (diceRollNumb != 7 && rollCount < 1 || playerPointsArr[0] != playerPointsArr[j]) //If neither of the two checks above are true just keeps updating the user through the dice game.
             {
                 displaySection.innerHTML = `Your point is ${playerPoint}. You rolled a ${diceRollNumb}. Keep rolling.`;
-                console.log(`Your point is ${playerPoint}. You rolled a ${diceRollNumb}. Keep rolling.`);
+                console.log("just showing every time the dice roll");
             }
         }
     }
-    // console.log(`player point: ${playerPoint}`);
     diceRollNumb = 0;
     console.log(playerPointsArr);
 })
+
+function InputBoxValidation()
+{
+    switch (isNaN(inputBox.value))
+    {
+        case true:
+            inputBox.value = inputBox.value.slice(0, -1);
+        break
+        case false:
+            wagerPerRound = inputBox.value;
+        break
+    }
+}
+
+function PayOut_PayUp()
+{
+    switch (winRound)
+    {
+        case true:
+            payout = wagerPerRound;
+            start_TotalWager += payout;
+            displayMoney.innerHTML = `Payout: ${payout}`;
+            console.log(start_TotalWager);
+        break;
+
+        case false:
+            payout = wagerPerRound;
+            start_TotalWager -= wagerPerRound;
+            displayMoney.innerHTML = `Lost: ${payout}`;
+            console.log(start_TotalWager);
+        break;
+    }
+}
+
+function ResetGame()
+{
+    start_TotalWager = 0;
+    wagerPerRound = 0;
+    playerPointsArr = [];
+    playerPoint = 0;
+    winningPoint = 0
+    diceRollNumb = 0;
+    rollCount = 0;
+    winRound = false;
+    gameOver = false;
+}
+
+function ResetPoint()
+{
+    wagerPerRound = 0;
+    playerPointsArr = [];
+    playerPoint = 0;
+    winningPoint = 0
+    diceRollNumb = 0;
+    rollCount = 0;
+    winRound = false;
+    gameOver = false;
+}
 
 function CheckFirstRoll()
 {
@@ -97,11 +138,19 @@ function CheckFirstRoll()
     {
         displaySection.innerHTML = `You Win. You rolled a ${playerPoint} on your comeout roll.`;
         console.log(`You Win. You have rolled ${playerPoint} on the comeout roll.`);
+        winRound = true;
+        PayOut_PayUp()
     }
     else if (playerPointsArr[0] == 2 || playerPointsArr[0] == 3 || playerPointsArr[0] == 12)
     {
         displaySection.innerHTML = `You Lose. You rolled a ${playerPoint} on your comeout roll.`;
         console.log(`You Lose. You have rolled ${playerPoint} on the comeout roll.`)
+        winRound = false;
+        PayOut_PayUp();
+    }
+    else
+    {
+        displaySection.innerHTML = `You rolled a ${diceRollNumb} on your comeout roll. ${diceRollNumb} is your point.`;//Introding the point from the first roll.
     }
 }
 
@@ -237,4 +286,3 @@ function Dice2Display()
         break
     }
 }//End Dice2Display Function
-
