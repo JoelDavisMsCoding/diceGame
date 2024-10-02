@@ -1,6 +1,15 @@
-body {background-color: green;}
+.board
+{
+    border: ridge;
+    background-color: green;
+    border-radius: 25%;
+    margin-top: 5%;
+    height: 600px;
+    padding-top: 100px;
+}
+
 .giCol1 input {text-align: -webkit-center;}
-#wagerButton {border-radius: 5px;}
+#wagerButton {border: outset; border-radius: 5px; background-color: red; color: aliceblue;}
 .giCol1 {align-items: center; place-content: center; padding-top: 5%; padding-bottom: 10px;}
 .giCol1 p {margin-top: 0; margin-bottom: 0rem; padding-right: 10px;}
 .dice1
@@ -11,11 +20,16 @@ body {background-color: green;}
     line-height: 45%;
     font-size: 60px;
     text-align: center;
-    background-color:white;
-    border-style: solid;
+    background-color:rgb(255, 0, 0);
+    border-style: inset;
+    border-width: thick;
+    border-color: red;
     height: 100px;
     width: 100px;
-    border-radius: 10%; box-shadow: 0, 0, 10px rgba(0, 0, 0, 0.25);
+    border-radius: 10%;
+    box-shadow: 6px 5px 5px 1px #d00418;
+    &.bouncing {animation: bouncing 0.3s ease-in-out infinite;}
+    
 }
 .dice2
 {
@@ -25,13 +39,55 @@ body {background-color: green;}
     line-height: 45%;
     font-size: 60px;
     text-align: center;
-    background-color:white;
-    border-style: solid;
+    background-color:rgb(255, 0, 0);
+    border-style: inset;
+    border-width: thick;
+    border-color: red;
     height: 100px;
     width: 100px;
     border-radius: 10%;
-    box-shadow: 5px, 5px, 10px rgba(255, 255, 255, 0.5);
+    box-shadow: 6px 5px 5px 1px #d00418;
+    &.bouncing {animation: bouncing 0.4s infinite;}
 }
-.col {color: rgb(0, 0, 0);}
+
+@keyframes bouncing
+{
+
+    100% {transform: translateY(-25px) rotate(360deg) translate(-3em,1em);}
+
+}
+
+.col {color: rgb(255, 255, 255);}
 .centerMidDot {position: absolute; align-self: center; position-area: center;}
-#cashOutBtn {border-radius: 5px;}
+
+.cashout {padding-top: 5px;}
+#cashOutBtn {border: outset; border-radius: 5px; background-color: red; color: aliceblue;}
+
+body #myVideo
+{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+}
+
+a {transition: 0.5s; background-color: #fff;}
+a:hover
+{
+    background: var(--clr);
+    box-shadow: 0 0 35px var(--clr);
+}
+a:before
+{
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: #27282c;
+}
+a button 
+{
+    position: relative;
+    z-index: 1;
+}

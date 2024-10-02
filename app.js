@@ -1,12 +1,3 @@
-//Create a variable to store a random number 1-6. This variable will be used twice for each of the two dice giving a possible total of 12 when combined.
-//Create different variables to hold and represent the two pair of dice that will be used for the game.
-//Once you have the variables grabbing the correct data create a event listener so when either dice are clicked it will begin the dice to roll.
-//The Random number will be stored and that will be used to tell the dice what number to display on the html page.
-//On the first roll the diceRollNumb(point) of the two numbers will be stored because this will be the focus point of the game.
-//If the diceRollNumb of the first number is 7 or 11 the player wins the wager for that roll. If the diceRollNumb on the the first roll is 2, 3, or 12 money is lost.
-//Use a while loop to check every time the dice are rolled to see if the new diceRollNumb matches the point(diceRollNumb from first roll) or 7.
-//if the point is matched before 7 appears the wager is won. If 7 appears before the point the wager is lost.
-
 let moneytotal = document.querySelector(".giCol1 p"); //shows the min/max bet limit until correct input then displays the money total
 let inputBox = document.getElementById("wagerInput"); //area where they type the money they will bet for this round.
 let addWagerBtn = document.getElementById("wagerButton"); //button sends the data once the wager is inserted
@@ -16,7 +7,8 @@ let dice1 = document.querySelector(".dice1"); //assigned this a variable to be a
 let dice2 = document.querySelector(".dice2");
 let dice1Display = document.querySelectorAll(".dice1 .col"); //Allows access and control over the dots inside the dice(how i change dice number)
 let dice2Display = document.querySelectorAll(".dice2 .col");
-let cashOutBtn  = document.getElementById("cashOutBtn");
+let cashOutBtn  = document.getElementById("cashOutBtn"); //clear/return the wager and allow the player to enter more money to gamble with.
+let cashOutBtn1  = document.querySelector(".col a");
 let start_TotalWager = 200.00;
 let wagerPerRound = 0;
 let playerPointsArr = [];
@@ -25,7 +17,7 @@ let winningPoint = 0;
 let diceRollNumb = 0;
 let rollCount = 0;
 let winRound = false;
-let gameOver = false;
+let isGameOn = false;
 
 if (inputBox.disabled != true) {inputBox.removeAttribute("disabled");} //Stop the user from typing in the input box once they submit gambling wager until a new game.
 
@@ -45,46 +37,64 @@ cashOutBtn.addEventListener("click", () =>
 {
     ResetGame()
     ResetInputBox();
-    let getChips = prompt("How much money do you want in chips? If you are finished enter 0.");
+    let getChips = prompt("How much money do you want in chips? If you are finished enter 0 or press cancel.");
     while (isNaN(getChips) ){getChips = prompt("How much money do you want in chips? If you are finished enter 0.")}
     getChips = parseFloat(getChips);
     start_TotalWager = getChips;
-    if (getChips == 0)
+    if (getChips == 0 || isNaN(getChips) == true)
     {
+        if (isNaN(getChips) == true) {
+            ResetGame();
+        ResetInputBox();
+        inputBox.disabled = "true";
+        addWagerBtn.disabled = "true";
+        isGameOn = false;
+        }
+        else{
         ResetGame();
         ResetInputBox();
         inputBox.disabled = "true";
-        gameOver = true
+        isGameOn = true;}
     }
 })
 
 dice1.addEventListener("click", () =>
 {
-    console.log(start_TotalWager)
-    if (gameOver == false)
-    {
+    if (isGameOn != false) //if wager amount is not loaded you will not be able to click the dice which starts the game.
+    {   
+        isGameOn = false;
+        setTimeout(() => {isGameOn = true;}, 4000);
+
+        dice1.classList.add("bouncing");//makes the dice bounce and roll when
+        dice2.classList.add("bouncing");
+        setTimeout(() => { dice1.classList.remove("bouncing");dice2.classList.remove("bouncing")}, 1000);
+        
         Dice1Display();
         Dice2Display();
         playerPointsArr.push(diceRollNumb);
         rollCount++
-    
         playerPoint = playerPointsArr[0];
         CheckFirstRoll();
         CheckForPoint();
         InvalidFunds();
         diceRollNumb = 0;
-        console.log(playerPointsArr);
     }
     else {};
 })
 
+
 function StartGame()
 {
+    displaySection.style.backgroundColor = "green";
+    displaySection.style.border = "solid";
+    displayMoney.style.backgroundColor = "red";
+    displayMoney.style.border = "solid";
     moneytotal.innerHTML = `Currency Total: $${start_TotalWager}`;
     inputBox.value = "Bet Placed...";
     displayMoney.innerHTML = `Betting: ${wagerPerRound}`
     displaySection.innerHTML = "Click the dice to begin roll."
     inputBox.disabled = "true";
+    addWagerBtn.disabled = true;
 }
 
 function InvalidFunds()
@@ -93,11 +103,11 @@ function InvalidFunds()
         {
             setTimeout(() =>
             {
-                alert("Bets must be $5 or greater to roll the dice. You can cash out at the front.");               
+                alert("Bets must be $5 or greater to roll the dice. Press Cash Out button to cash for chips.");               
                 ResetGame();
                 ResetInputBox();
                 inputBox.disabled = "true";
-                gameOver = true
+                isGameOn = false
             }, 3000);  
         }
     else if (start_TotalWager == 0)
@@ -108,7 +118,7 @@ function InvalidFunds()
             ResetGame();
             ResetInputBox();
             inputBox.disabled = "true";
-            gameOver = true
+            isGameOn = false
         }, 3000);
     }
 }
@@ -134,17 +144,21 @@ function WagerLimit(wager) //make sure money amount fits the min and max require
     {
         alert("You do not have enough money");
         RollReset();
+        isGameOn = false
     }
     else if (wager > 500.00)
     {
         alert("$500.00 Max Betting Limit");
         RollReset();
+        isGameOn = false
     }
     else if (wager < 5.00)
     {
         alert("$5.00 Minimum Betting Limit")
         RollReset();
+        isGameOn = false
     }
+    else {isGameOn = true}
 }
 
 function Dice1Display() //displays the different sides of dice 1
@@ -288,24 +302,22 @@ function CheckFirstRoll() //checks the first roll to see if its 7 or 11(win) or 
         inputBox.disabled = false;
         inputBox.value = "...";
         displaySection.innerHTML = `You Win. You rolled a ${playerPoint} on your comeout roll.`;
-        console.log(`You Win. You have rolled ${playerPoint} on the comeout roll.`);
         winRound = true;
-        PayOut_PayUp()
-        setTimeout(() => { ResetPoint(); RollReset();}, 3000);
+        PayOut_PayUp();
+        setTimeout(() => { ResetPoint(); RollReset();}, 5000);
     }
     else if (playerPointsArr[0] == 2 || playerPointsArr[0] == 3 || playerPointsArr[0] == 12)
     {
         inputBox.disabled = false;
         inputBox.value = "...";
         displaySection.innerHTML = `You Lose. You rolled a ${playerPoint} on your comeout roll.`;
-        console.log(`You Lose. You have rolled ${playerPoint} on the comeout roll.`)
         winRound = false;
-        PayOut_PayUp()
-        setTimeout(() => { ResetPoint(); RollReset();}, 3000);
+        PayOut_PayUp();
+        setTimeout(() => { ResetPoint(); RollReset();}, 5000);
     }
     else
     {
-        displaySection.innerHTML = `You rolled a ${diceRollNumb} on the comeout roll. ${diceRollNumb} is your point.`;//Introding the point from the first roll.
+        displaySection.innerHTML = `Rolled: ${diceRollNumb} Point: ${diceRollNumb}`;//Introding the point from the first roll.
     }
 }
 
@@ -319,27 +331,27 @@ function CheckForPoint() //checks to see if the point is matched(win) before rol
             {
                 inputBox.disabled = false;
                 inputBox.value = "...";
-                displaySection.innerHTML = `You Win. Your point is ${playerPoint}. You rolled a ${diceRollNumb}.`; //Checks the first number then compare the next rolled number to see if they match. Indicating win if true.
+                displaySection.innerHTML = `You Win. Point ${playerPoint}. Rolled: ${diceRollNumb}`; //Checks the first number then compare the next rolled number to see if they match. Indicating win if true.
                 winRound = true;
                 PayOut_PayUp();
                 i = playerPointsArr.length;
                 j = playerPointsArr.length;
-                setTimeout(() => { ResetPoint(); RollReset();}, 3000);
+                setTimeout(() => { ResetPoint(); RollReset();}, 5000);
             }
             else if (diceRollNumb == 7 && rollCount > 1)
             {
                 inputBox.disabled = false;
                 inputBox.value = "...";
-                displaySection.innerHTML = `You Lose! Your point is ${playerPoint}. You rolled a ${diceRollNumb}.`; //Checks for any number after the first roll checking for a 7 Indicating a lost if true.
+                displaySection.innerHTML = `You Lose! Point: ${playerPoint} Rolled: ${diceRollNumb}`; //Checks for any number after the first roll checking for a 7 Indicating a lost if true.
                 winRound = false;
                 PayOut_PayUp();
                 i = playerPointsArr.length;
                 j = playerPointsArr.length;
-                setTimeout(() => { ResetPoint(); RollReset();}, 3000);
+                setTimeout(() => { ResetPoint(); RollReset();}, 5000);
             }
             else //If neither of the two checks above are true just keeps updating the user through the dice game.
             {
-                displaySection.innerHTML = `Your point is ${playerPoint}. You rolled a ${diceRollNumb}. Keep rolling.`;
+                displaySection.innerHTML = `Point: ${playerPoint} Rolled: ${diceRollNumb}`;
             }
         }
     }
@@ -354,7 +366,6 @@ function PayOut_PayUp() //determines to pay or collect based off conditions
             start_TotalWager += payout;
             displayMoney.innerHTML = `Payout: ${payout}`;
             moneytotal.innerHTML = `Currency Total: $${start_TotalWager}`;
-            console.log(start_TotalWager);
         break;
 
         case false:
@@ -362,7 +373,6 @@ function PayOut_PayUp() //determines to pay or collect based off conditions
             start_TotalWager -= wagerPerRound;
             displayMoney.innerHTML = `Lost: ${payout}`;
             moneytotal.innerHTML = `Currency Total: $${start_TotalWager}`;
-            console.log(start_TotalWager);
         break;
     }
 }
@@ -376,7 +386,7 @@ function ResetPoint() //Resets the point when the player wins or loses so they c
     diceRollNumb = 0;
     rollCount = 0;
     winRound = false;
-    gameOver = false;
+    isGameOn = false;
     inputBox.disabled = "true";
 }
 
@@ -390,7 +400,7 @@ function ResetGame() //Resets the whole game after checking to see if player wan
     diceRollNumb = 0;
     rollCount = 0;
     winRound = false;
-    gameOver = false;
+    isGameOn = false;
 }
 
 function RollReset() //Resets the default values of the page
@@ -398,10 +408,13 @@ function RollReset() //Resets the default values of the page
     moneytotal.innerHTML = `Currency Total: $${start_TotalWager}`;
     inputBox.value = "";
     inputBox.placeholder = "Enter wager amount.";
+    displayMoney.style.backgroundColor = "none";
+    displayMoney.style.border = "none";
     displayMoney.innerHTML = "";
     displaySection.innerHTML = "Add wager amount to roll";
     wagerPerRound = 0;
-    inputBox.removeAttribute("disabled")
+    inputBox.removeAttribute("disabled");
+    addWagerBtn.removeAttribute("disabled");
 }
 
 function ResetInputBox() //Resets the default values of the page
@@ -411,19 +424,162 @@ function ResetInputBox() //Resets the default values of the page
         moneytotal.innerHTML = "Max: $500.00 - Min: $5.00";
         inputBox.value = "";
         inputBox.placeholder = "Enter wager amount.";
+        displaySection.style.backgroundColor = "none";
+        displaySection.style.border = "none";
+        displayMoney.style.backgroundColor = "none";
+        displayMoney.style.border = "none";
         displayMoney.innerHTML = "";
         displaySection.innerHTML = "";
         wagerPerRound = 0;
         inputBox.removeAttribute("disabled");
+        addWagerBtn.removeAttribute("disabled");
     }
     else 
     {
         moneytotal.innerHTML = "Max: $500.00 - Min: $5.00";
         inputBox.value = "";
         inputBox.placeholder = "Enter wager amount.";
+        displaySection.style.backgroundColor = "none";
+        displaySection.style.border = "none";
+        displayMoney.style.backgroundColor = "none";
+        displayMoney.style.border = "none";
         displayMoney.innerHTML = "";
         displaySection.innerHTML = "";
         wagerPerRound = 0;
         inputBox.removeAttribute("disabled");
+        addWagerBtn.removeAttribute("disabled");
     }
+}
+function Dice1ChgDots() //displays the different sides of dice 1
+{
+    let dice1Number = Math.floor(Math.random() * 6) + 1;;
+    switch (dice1Number > 0)
+    {
+        case dice1Number == 1:
+            for (let i = 0; i < dice1Display.length; i++)
+            {
+                if (dice1Display[i] == dice1Display[3])
+                {dice1Display[i].classList.remove("invisible");}
+                else
+                {dice1Display[i].classList.add("invisible");}
+            }
+        break;
+        case dice1Number == 2:
+            for (let i = 0; i < dice1Display.length; i++)
+            {
+                if (dice1Display[i] == dice1Display[0] || dice1Display[i] == dice1Display[6]) {dice1Display[i].classList.remove("invisible");}
+                
+                else{dice1Display[i].classList.add("invisible");}   
+            }
+        break;
+        case dice1Number == 3:
+            for (let i = 0; i < dice1Display.length; i++)
+            {
+                if (dice1Display[i] == dice1Display[0] || dice1Display[i] == dice1Display[6]) {dice1Display[i].classList.remove("invisible")}
+
+                else if (dice1Display[i] == dice1Display[3])
+                {dice1Display[i].classList.remove("invisible");}
+
+                else {dice1Display[i].classList.add("invisible");}   
+            }
+        break;
+        case dice1Number == 4:
+            for (let i = 0; i < dice1Display.length; i++)
+            {
+                if (dice1Display[i] == dice1Display[0] || dice1Display[i] == dice1Display[1]) {dice1Display[i].classList.remove("invisible")}
+
+                else if (dice1Display[i] == dice1Display[5] || dice1Display[i] == dice1Display[6]) {dice1Display[i].classList.remove("invisible")}
+                
+                else {dice1Display[i].classList.add("invisible");}   
+            }
+        break;
+        case dice1Number == 5:
+            for (let i = 0; i < dice1Display.length; i++)
+            {
+                if (dice1Display[i] == dice1Display[0] || dice1Display[i] == dice1Display[1]) {dice1Display[i].classList.remove("invisible")}
+
+                else if (dice1Display[i] == dice1Display[3]) {dice1Display[i].classList.remove("invisible");}
+
+                else if (dice1Display[i] == dice1Display[5] || dice1Display[i] == dice1Display[6]) {dice1Display[i].classList.remove("invisible")}
+            
+                else {dice1Display[i].classList.add("invisible");}   
+            }
+        break;
+        case dice1Number == 6:
+            for (let i = 0; i < dice1Display.length; i++)
+            {
+                if (dice1Display[i] == dice1Display[3]) {dice1Display[i].classList.add("invisible")}
+
+                else {dice1Display[i].classList.remove("invisible")}
+            }
+        break;
+    }
+}
+
+function Dice2ChgDots() //displays the different sides of dice 2
+{
+    let dice2Number = Math.floor(Math.random() * 6) + 1;
+    switch (dice2Number > 0)
+    {
+        case dice2Number == 1://set to one by default in html. no action needed here.
+            for (let i = 0; i < dice2Display.length; i++)
+            {
+                if (dice2Display[i] == dice2Display[3])
+                {dice2Display[i].classList.remove("invisible")}
+                
+                else{dice2Display[i].classList.add("invisible");}   
+            }
+        break;
+        case dice2Number == 2:
+            for (let i = 0; i < dice2Display.length; i++)
+            {
+                if (dice2Display[i] == dice2Display[0] || dice2Display[i] == dice2Display[6])
+                {dice2Display[i].classList.remove("invisible")}
+                
+                else{dice2Display[i].classList.add("invisible");}
+
+            }
+        break;
+        case dice2Number == 3:
+            for (let i = 0; i < dice2Display.length; i++)
+            {
+                if (dice2Display[i] == dice2Display[0] || dice2Display[i] == dice2Display[6]) {dice2Display[i].classList.remove("invisible");}
+                
+                else if (dice2Display[i] == dice2Display[3]) {dice2Display[i].classList.remove("invisible");}
+
+                else {dice2Display[i].classList.add("invisible");}
+            }
+        break;
+        case dice2Number == 4:
+            for (let i = 0; i < dice2Display.length; i++)
+            {
+                if (dice2Display[i] == dice2Display[0] || dice2Display[i] == dice2Display[1]) {dice2Display[i].classList.remove("invisible");}
+
+                else if (dice2Display[i] == dice2Display[5] || dice2Display[i] == dice2Display[6]) {dice2Display[i].classList.remove("invisible");}
+             
+                else {dice2Display[i].classList.add("invisible");}   
+            }
+        break;
+        case dice2Number == 5:
+            for (let i = 0; i < dice2Display.length; i++)
+            {
+                if (dice2Display[i] == dice2Display[2] || dice2Display[i] == dice2Display[4]) {dice2Display[i].classList.add("invisible");}
+
+                else {dice2Display[i].classList.remove("invisible")}
+            }
+        break;
+        case dice2Number == 6:
+            for (let i = 0; i < dice2Display.length; i++)
+            {
+                if (dice2Display[i] == dice2Display[3]) {dice2Display[i].classList.add("invisible");}
+
+                else {dice2Display[i].classList.remove("invisible");} 
+            }
+        break
+    }
+}
+function RotateDice()
+{
+    setTimeout(() => {Dice1ChgDots();Dice2ChgDots();}, 100);
+    setTimeout(() => {Dice1ChgDots();Dice2ChgDots();}, 100);
 }
