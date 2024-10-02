@@ -8,7 +8,6 @@ let dice2 = document.querySelector(".dice2");
 let dice1Display = document.querySelectorAll(".dice1 .col"); //Allows access and control over the dots inside the dice(how i change dice number)
 let dice2Display = document.querySelectorAll(".dice2 .col");
 let cashOutBtn  = document.getElementById("cashOutBtn"); //clear/return the wager and allow the player to enter more money to gamble with.
-let cashOutBtn1  = document.querySelector(".col a");
 let start_TotalWager = 200.00;
 let wagerPerRound = 0;
 let playerPointsArr = [];

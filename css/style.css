@@ -72,22 +72,3 @@ body #myVideo
     min-height: 100%;
     z-index: -1;
 }
-
-a {transition: 0.5s; background-color: #fff;}
-a:hover
-{
-    background: var(--clr);
-    box-shadow: 0 0 35px var(--clr);
-}
-a:before
-{
-    content: "";
-    position: absolute;
-    inset: 2px;
-    background: #27282c;
-}
-a button 
-{
-    position: relative;
-    z-index: 1;
-}
