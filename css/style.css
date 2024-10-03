@@ -60,7 +60,7 @@
 }
 
 .col {color: rgb(255, 255, 255);}
-.centerMidDot {position: absolute; align-self: center; inset-area: center;}
+.centerMidDot {position: absolute; align-self: center; left: 0;}
 
 .cashout {padding-top: 5px;}
 #cashOutBtn {border: outset; border-radius: 5px; background-color: red; color: aliceblue;}
