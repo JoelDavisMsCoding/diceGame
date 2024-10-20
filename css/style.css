@@ -3,7 +3,7 @@
     border: ridge;
     background-color: green;
     border-radius: 25%;
-    margin-top: 5%;
+    margin-top: 0%;
     height: 600px;
     padding-top: 100px;
 }
@@ -30,7 +30,7 @@
     border-radius: 10%;
     box-shadow: 6px 5px 5px 1px #d00418;
     &.bouncing {animation: bouncing 0.3s ease-in-out infinite;}
-    
+    transition: top 0.2s ease-in-out;
 }
 .dice2
 {
@@ -50,13 +50,27 @@
     border-radius: 10%;
     box-shadow: 6px 5px 5px 1px #d00418;
     &.bouncing {animation: bouncing 0.4s infinite;}
+    transition: top 0.2s ease-in-out;
 }
+
+.dice1.jump {top: -20px;}
+.dice2.jump {top: -20px;}
 
 @keyframes bouncing
 {
-
     100% {transform: translateY(-25px) rotate(360deg) translate(-3em,1em);}
+}
 
+a
+{
+    color: red;
+    transition: 0.5;
+}
+a:hover
+{
+    background: var(--clr);
+    box-shadow: 10px 0px 100px 30px red;
+    letter-spacing: 0.25em;
 }
 
 .col {color: rgb(255, 255, 255);}
@@ -74,3 +88,5 @@ body #myVideo
     min-height: 100%;
     z-index: -1;
 }
+
+.bottom {padding-top: 50px;}

@@ -18,6 +18,7 @@ let rollCount = 0;
 let winRound = false;
 let isGameOn = false;
 
+
 if (inputBox.disabled != true) {inputBox.removeAttribute("disabled");} //Stop the user from typing in the input box once they submit gambling wager until a new game.
 
 inputBox.addEventListener("input", () => //Entering how much money they will use for the round.
@@ -37,32 +38,64 @@ cashOutBtn.addEventListener("click", () =>
     ResetGame()
     ResetInputBox();
     let getChips = prompt("How much money do you want in chips? If you are finished enter 0 or press cancel.");
-    while (isNaN(getChips) ){getChips = prompt("How much money do you want in chips? If you are finished enter 0.")}
+    while (isNaN(getChips)) {getChips = prompt("How much money do you want in chips? If you are finished enter 0.")}
     getChips = parseFloat(getChips);
     start_TotalWager = getChips;
+
     if (getChips == 0 || isNaN(getChips) == true)
     {
-        if (isNaN(getChips) == true) {
+        if (isNaN(getChips) == true)
+        {
             ResetGame();
-        ResetInputBox();
-        inputBox.disabled = "true";
-        addWagerBtn.disabled = "true";
-        isGameOn = false;
+            ResetInputBox();
+            inputBox.disabled = "true";
+            addWagerBtn.disabled = "true";
+            isGameOn = false;
         }
-        else{
-        ResetGame();
-        ResetInputBox();
-        inputBox.disabled = "true";
-        isGameOn = true;}
+        else
+        {
+            ResetGame();
+            ResetInputBox();
+            inputBox.disabled = "true";
+            isGameOn = true;
+        }
     }
 })
+
+dice1.addEventListener("mouseover", () => //Hover glow
+{
+    dice1.style.boxShadow = "10px 0px 150px 30px red";
+    dice1.classList.add("jump");
+    dice1.addEventListener("mouseout", () => 
+    {
+        dice1.style.boxShadow = "";
+        setTimeout(() => 
+        {
+            dice1.classList.remove("jump")
+        }, 200);
+    })
+})
+
+dice2.addEventListener("mouseover", () => //Hover Glow
+    {
+        dice2.style.boxShadow = "10px 0px 150px 30px red";
+        dice2.classList.add("jump");
+        dice2.addEventListener("mouseout", () => 
+        {
+            dice2.style.boxShadow = "";
+            setTimeout(() => 
+            {
+                dice2.classList.remove("jump")
+            }, 200);
+        })
+    })
 
 dice1.addEventListener("click", () =>
 {
     if (isGameOn != false) //if wager amount is not loaded you will not be able to click the dice which starts the game.
     {   
         isGameOn = false;
-        setTimeout(() => {isGameOn = true;}, 4000);
+        setTimeout(() => {isGameOn = true;}, 3000);
 
         dice1.classList.add("bouncing");//makes the dice bounce and roll when
         dice2.classList.add("bouncing");
@@ -89,35 +122,35 @@ function StartGame()
     displayMoney.style.backgroundColor = "red";
     displayMoney.style.border = "solid";
     moneytotal.innerHTML = `Currency Total: $${start_TotalWager}`;
-    inputBox.value = "Bet Placed...";
-    displayMoney.innerHTML = `Betting: ${wagerPerRound}`
+    inputBox.value = "";
+    inputBox.placeholder = "Bet Placed"
+    displayMoney.innerHTML = `Betting: $${wagerPerRound}`
     displaySection.innerHTML = "Click the dice to begin roll."
     inputBox.disabled = "true";
-    addWagerBtn.disabled = true;
+    addWagerBtn.disabled = "true";
 }
-
 function InvalidFunds()
 {
     if (start_TotalWager < 5.00 && start_TotalWager != 0 )
         {
+           console.log("less than 5 not zero")
             setTimeout(() =>
             {
                 alert("Bets must be $5 or greater to roll the dice. Press Cash Out button to cash for chips.");               
                 ResetGame();
                 ResetInputBox();
-                inputBox.disabled = "true";
-                isGameOn = false
+                isGameOn = false;
             }, 3000);  
         }
     else if (start_TotalWager == 0)
     {
+        console.log("equals to zero")
         setTimeout(() =>
         {
             alert("Game Over! You are out of money.");
             ResetGame();
             ResetInputBox();
-            inputBox.disabled = "true";
-            isGameOn = false
+            isGameOn = false;
         }, 3000);
     }
 }
@@ -164,7 +197,6 @@ function Dice1Display() //displays the different sides of dice 1
 {
     let dice1Numb = Math.floor(Math.random() * 6) + 1;;
     diceRollNumb += dice1Numb;
-    console.log(dice1Numb);
     switch (dice1Numb > 0)
     {
         case dice1Numb == 1:
@@ -409,11 +441,17 @@ function RollReset() //Resets the default values of the page
     inputBox.placeholder = "Enter wager amount.";
     displayMoney.style.backgroundColor = "none";
     displayMoney.style.border = "none";
+    displaySection.style.backgroundColor = "none";
+    displaySection.style.border = "none";
     displayMoney.innerHTML = "";
-    displaySection.innerHTML = "Add wager amount to roll";
+    displaySection.innerHTML = "";
     wagerPerRound = 0;
-    inputBox.removeAttribute("disabled");
-    addWagerBtn.removeAttribute("disabled");
+    if (start_TotalWager != 0)
+    {
+        inputBox.removeAttribute("disabled");
+        addWagerBtn.removeAttribute("disabled");
+
+    }
 }
 
 function ResetInputBox() //Resets the default values of the page
