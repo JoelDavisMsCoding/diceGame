@@ -94,9 +94,6 @@ dice1.addEventListener("click", () =>
 {
     if (isGameOn != false) //if wager amount is not loaded you will not be able to click the dice which starts the game.
     {   
-        isGameOn = false;
-        setTimeout(() => {isGameOn = true;}, 3000);
-
         dice1.classList.add("bouncing");//makes the dice bounce and roll when
         dice2.classList.add("bouncing");
         setTimeout(() => { dice1.classList.remove("bouncing");dice2.classList.remove("bouncing")}, 1000);
@@ -335,6 +332,8 @@ function CheckFirstRoll() //checks the first roll to see if its 7 or 11(win) or 
         displaySection.innerHTML = `You Win. You rolled a ${playerPoint} on your comeout roll.`;
         winRound = true;
         PayOut_PayUp();
+        isGameOn = false; //this code is what pauses the player from clicking the dice after a win or lose
+        setTimeout(() => {isGameOn = true;}, 5000); //This code goes with the code above allowing them to click again after a certain time.
         setTimeout(() => { ResetPoint(); RollReset();}, 5000);
     }
     else if (playerPointsArr[0] == 2 || playerPointsArr[0] == 3 || playerPointsArr[0] == 12)
@@ -344,6 +343,8 @@ function CheckFirstRoll() //checks the first roll to see if its 7 or 11(win) or 
         displaySection.innerHTML = `You Lose. You rolled a ${playerPoint} on your comeout roll.`;
         winRound = false;
         PayOut_PayUp();
+        isGameOn = false; //this code is what pauses the player from clicking the dice after a win or lose
+        setTimeout(() => {isGameOn = true;}, 5000); //This code goes with the code above allowing them to click again after a certain time.
         setTimeout(() => { ResetPoint(); RollReset();}, 5000);
     }
     else
@@ -367,6 +368,8 @@ function CheckForPoint() //checks to see if the point is matched(win) before rol
                 PayOut_PayUp();
                 i = playerPointsArr.length;
                 j = playerPointsArr.length;
+                isGameOn = false; //this code is what pauses the player from clicking the dice after a win or lose
+                setTimeout(() => {isGameOn = true;}, 5000); //This code goes with the code above allowing them to click again after a certain time.
                 setTimeout(() => { ResetPoint(); RollReset();}, 5000);
             }
             else if (diceRollNumb == 7 && rollCount > 1)
@@ -378,6 +381,8 @@ function CheckForPoint() //checks to see if the point is matched(win) before rol
                 PayOut_PayUp();
                 i = playerPointsArr.length;
                 j = playerPointsArr.length;
+                isGameOn = false; //this code is what pauses the player from clicking the dice after a win or lose
+                setTimeout(() => {isGameOn = true;}, 5000); //This code goes with the code above allowing them to click again after a certain time.
                 setTimeout(() => { ResetPoint(); RollReset();}, 5000);
             }
             else //If neither of the two checks above are true just keeps updating the user through the dice game.
